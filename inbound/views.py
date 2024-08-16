@@ -4,14 +4,11 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from environs import Env
 
-from metra.views import handle_metra_call
-from sharks.views import handle_sharks_call
-from medspa.views import handle_medspa_call
-
 env = Env()
 env.read_env()
 
 VAPI_URL_SECRET = env.str("VAPI_URL_SECRET")
+VAPI_PHONE_LIST = env.list("VAPI_PHONE_LIST")
 
 @csrf_exempt
 def testAndDirectInboundCall(request):
@@ -39,11 +36,8 @@ def testAndDirectInboundCall(request):
     call_data = message.get("call", {})
     phone_number_id = call_data.get("phoneNumberId")
     
-    vapi_phone_list = [
-        "95606d61-7ead-4836-847f-ae20dd869b33",
-        "285e5e94-ad1b-4910-b66c-5048eab0ad58",
-        "ffe3fe49-db4c-40a1-ad89-4b0b5188ff0d"
-    ]
+    vapi_phone_list = VAPI_PHONE_LIST
+
 
     if phone_number_id not in vapi_phone_list:        
         return JsonResponse({'error': 'Request Forbidden'}, status=403)
@@ -54,15 +48,32 @@ def testAndDirectInboundCall(request):
     call_id = call_data.get("id")
      
     # Route to appropriate app based on phone ID
-    if phone_number_id == "95606d61-7ead-4836-847f-ae20dd869b33":
-        return handle_metra_call(request_data)
-    elif phone_number_id == "285e5e94-ad1b-4910-b66c-5048eab0ad58":
-        return handle_sharks_call(request_data)
-    elif phone_number_id == "ffe3fe49-db4c-40a1-ad89-4b0b5188ff0d":
-        return handle_medspa_call(request_data)
+    if phone_number_id == vapi_phone_list[0]:
+        vapi_phone_id = vapi_phone_list[0]     
+        return phone_id_one_call(request_data, vapi_phone_list[0])
+    elif phone_number_id == vapi_phone_list[1]:
+        return phone_id_two_call(request_data, vapi_phone_list[1])
+    elif phone_number_id == vapi_phone_list[2]:
+        return phone_id_three_call(request_data, vapi_phone_list[2])
     else:
         return JsonResponse({'error': 'Unknown phone ID'}, status=400)
     
+
+def phone_id_one_call(request_data, vapi_phone_id):
+    print(f"switched to phone id {vapi_phone_id}")
+    return JsonResponse(f"Switched to phone id {vapi_phone_id}", status=200, safe=False)
+
+def phone_id_two_call(request_data, vapi_phone_id):
+    print(f"switched to phone id {vapi_phone_id}")
+    return JsonResponse(f"Switched to phone id {vapi_phone_id}", status=200, safe=False)
+
+def phone_id_three_call(request_data, vapi_phone_id):
+    print(f"switched to phone id {vapi_phone_id}")
+    return JsonResponse(f"Switched to phone id {vapi_phone_id}", status=200, safe=False)
+
+
+
+
   
 
     

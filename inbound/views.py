@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -12,6 +11,22 @@ VAPI_PHONE_LIST = env.list("VAPI_PHONE_LIST")
 
 @csrf_exempt
 def testAndDirectInboundCall(request):
+    """
+    View function to handle and direct inbound calls.
+
+    This function validates the incoming request, extracts call information,
+    and routes the call to the appropriate handling function based on the phone number ID.
+
+    Args:
+        request (HttpRequest): The incoming HTTP request.
+
+    Returns:
+        JsonResponse: A JSON response indicating the result of the operation or any errors.
+
+    Raises:
+        JsonResponse: With appropriate error messages and status codes for invalid requests.
+    """
+
     if request.method != 'POST':
         return JsonResponse({'error': 'Invalid request method'}, status=405)    
     try:
@@ -60,15 +75,50 @@ def testAndDirectInboundCall(request):
     
 
 def phone_id_one_call(request_data, vapi_phone_id):
-    print(f"switched to phone id {vapi_phone_id}")
+    """
+    Handle calls for the first phone ID.
+
+    Args:
+        request_data (dict): The parsed request data.
+        vapi_phone_id (str): The phone ID being handled.
+
+    Returns:
+        JsonResponse: A JSON response indicating the phone ID switch.
+    """
+    print('DO SOMETHING HERE IF PHONE ID ONE')
+
     return JsonResponse(f"Switched to phone id {vapi_phone_id}", status=200, safe=False)
 
 def phone_id_two_call(request_data, vapi_phone_id):
-    print(f"switched to phone id {vapi_phone_id}")
+    """
+    Handle calls for the second phone ID.
+
+    Args:
+        request_data (dict): The parsed request data.
+        vapi_phone_id (str): The phone ID being handled.
+
+    Returns:
+        JsonResponse: A JSON response indicating the phone ID switch.
+    """
+
+    print('DO SOMETHING HERE IF PHONE ID TWO')
+
     return JsonResponse(f"Switched to phone id {vapi_phone_id}", status=200, safe=False)
 
 def phone_id_three_call(request_data, vapi_phone_id):
-    print(f"switched to phone id {vapi_phone_id}")
+    """
+    Handle calls for the third phone ID.
+
+    Args:
+        request_data (dict): The parsed request data.
+        vapi_phone_id (str): The phone ID being handled.
+
+    Returns:
+        JsonResponse: A JSON response indicating the phone ID switch.
+    """
+    
+    print('DO SOMETHING HERE IF PHONE ID THREE')
+
     return JsonResponse(f"Switched to phone id {vapi_phone_id}", status=200, safe=False)
 
 
